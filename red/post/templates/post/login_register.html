@@ -1,0 +1,46 @@
+{% extends 'post/index.html' %} {% block content %} {% if page == 'login' %}
+
+<div>
+  <form action="" method="POST" class="flex p-2 m-2">
+    {% csrf_token %} {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+      <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    <div>
+      <label for="">Username:</label>
+      <input type="text" name="username" placeholder="Enter Username" />
+    </div>
+    <div>
+      <label for="">Password:</label>
+      <input type="text" name="password" placeholder="Enter Password" />
+    </div>
+    <input type="submit" value="Login" />
+    <label for=""
+      >wanna sign up? <a href="{% url 'register' %}">Register</a></label
+    >
+    <a href="{{request.META.HTTP_REFERER}}">Go Back</a>
+  </form>
+</div>
+
+{% else %}
+<div>
+  <form action="" method="POST" class="flex p-2 m-2">
+    {% csrf_token %} {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+      <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    {{form.as_p}}
+    <input type="submit" value="Register" />
+    <label for=""
+      >already signed up? <a href="{% url 'login' %}">Login</a></label
+    >
+    <a href="{{request.META.HTTP_REFERER}}">Go Back</a>
+  </form>
+</div>
+{% endif %} {% endblock %}

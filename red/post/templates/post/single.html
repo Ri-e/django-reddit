@@ -1,0 +1,26 @@
+{% extends 'post/index.html'%} {% block content %}
+<div class="border d-flex flex-column mb-3">
+  <h4>@{{post.user}}</h4>
+  <h1>{{post.heading}}</h1>
+  <p>{{post.desc}}</p>
+  <div class="comments">
+    <h3>Comments</h3>
+    <hr />
+    {% for i in comments %}
+      <div>
+        <p>
+          @{{i.user}} {{i.created|timesince}} ago
+        </p>
+        <p>
+          {{i.message}} 
+
+        </p>
+        <hr>
+
+      </div> 
+    {% endfor %}
+  </div>
+  <a href="{{request.META.HTTP_REFERER}}">Go Back</a>
+</div>
+
+{% endblock %}

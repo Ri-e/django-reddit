@@ -1,0 +1,51 @@
+{% extends 'post/index.html' %} {% block content %}
+<style>
+  .containers {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+  }
+  .topic {
+    display: flex;
+    flex-direction: column;
+  }
+</style>
+<div class="containers">
+  
+  <div>
+    <form action="{% url 'home' %}" method="GET">
+      <input type="text" name="q" placeholder="Search for Posts" />
+    </form>
+    <h2>Browse Topics</h2>
+    <hr />
+    <div class="topic">
+      <a href="{% url 'home' %}">All<a>
+    </div>
+    {% for i in topic %}
+    <div class="topic">
+      <a href="{% url 'home' %}?q={{i.topic}}">{{i.topic}}</a>
+    </div>
+
+    {% endfor %}
+  </div>
+  <div>
+    <h3>{{post_count}} posts available right now!!</h3>
+    <a href="{% url 'create' %}" class=".mb-3">Create Post</a>
+    <a href="{% url 'topic' %}">Create Topic</a>
+
+    {% for i in post %}
+
+    <div class="border d-flex flex-column mb-3">
+
+      {% if request.user == i.user %}
+      <a href="{% url 'update' i.id %}">Update Post</a>
+      <a href="{% url 'delete' i.id %}">Delete Post</a>
+      {% endif %}
+      <label>@{{i.user}}</label>
+      <a href="{% url 'single' i.id %}">{{i.heading}}</a>
+      <p>{{i.desc}}</p>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}
