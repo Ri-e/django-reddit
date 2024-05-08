@@ -27,8 +27,15 @@ def index(request):
 def single(request, pk):
     #this id = pk gets the object that matches
     post = Post.objects.get(id=pk)
-    comment_message = post.comment_set.all().order_by('-created')
+    comment_message = post.comment_set.all()
+    if request.method == 'POST':
+        Comment.objects.create(
+            user=request.user,
+            message=request.POST.get('addComment'),
+            parent=post
 
+        )
+        return redirect('single', pk=post.id)
     return render(request, "post/single.html", {'post' : post, 'comments' : comment_message})
 
 # checks authentication so that only logged in can create 
