@@ -28,6 +28,7 @@ def single(request, pk):
     #this id = pk gets the object that matches
     post = Post.objects.get(id=pk)
     comment_message = post.comment_set.all()
+    participants = post.participants.all()
     if request.method == 'POST':
         Comment.objects.create(
             user=request.user,
@@ -36,7 +37,7 @@ def single(request, pk):
 
         )
         return redirect('single', pk=post.id)
-    return render(request, "post/single.html", {'post' : post, 'comments' : comment_message})
+    return render(request, "post/single.html", {'post' : post, 'comments' : comment_message, 'ppc' : participants})
 
 # checks authentication so that only logged in can create 
 @login_required(login_url = 'login')
