@@ -1,0 +1,13 @@
+{% for i in post %}
+
+<div class="border d-flex flex-column mb-3">
+
+    {% if request.user == i.user %}
+    <a href="{% url 'update' i.id %}">Update Post</a>
+    <a href="{% url 'delete' i.id %}">Delete Post</a>
+    {% endif %}
+    <a href="{% url 'profile' i.user.id %}">@{{i.user}}</a>
+    <a href="{% url 'single' i.id %}">{{i.heading}}</a>
+    <p>{{i.desc}}</p>
+</div>
+{% endfor %}

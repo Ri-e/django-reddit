@@ -12,4 +12,7 @@ urlpatterns = [
     path('create/', views.create, name='create'),
     path('updatePost/<str:pk>', views.update, name='update'),
     path('delete/<str:pk>', views.delete,name='delete'),
+    path('delete-comment/<str:pk>', views.deleteComment, name='deleteComment'),
+    path('edit-comment/<str:pk>', views.editComments, name='edit'),
+    path('profile/<str:pk>', views.userProfile, name='profile')
 ]   

@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
-from .form import createPost, createTopics
+from .form import createPost, createTopics, editComment
 from django.contrib.auth.forms import UserCreationForm
 
 
@@ -19,9 +19,10 @@ def index(request):
     #for getting the search params
     q = request.GET.get('q') if request.GET.get('q') != None else ""
     #for searching on the basis of topic name, post name,  username
+    comments = Comment.objects.filter(Q(parent__topic__topic__icontains=q)).order_by('-created')
     post = Post.objects.filter(Q(topic__topic__icontains=q) | Q(heading__icontains = q) | Q(desc__icontains=q) | Q(user__username__icontains=q) )
     post_count = post.count()
-    return render(request, "post/home.html", {'post' : post, 'topic' : topic, 'post_count' : post_count})
+    return render(request, "post/home.html", {'post' : post, 'topic' : topic, 'post_count' : post_count, 'comments':comments})
 
 
 def single(request, pk):
@@ -36,6 +37,7 @@ def single(request, pk):
             parent=post
 
         )
+        post.participants.add(request.user)
         return redirect('single', pk=post.id)
     return render(request, "post/single.html", {'post' : post, 'comments' : comment_message, 'ppc' : participants})
 
@@ -49,7 +51,9 @@ def create(request):
         # fills the form with entered info
         form = createPost(request.POST)
         if form.is_valid():
-            form.save()
+            temp = form.save(commit=False)
+            temp.user = request.user
+            temp.save()
             return redirect('home')
     return render(request, 'post/createPost.html', {'form' : form})
 
@@ -131,3 +135,32 @@ def createTopic(request):
 
 
     return render(request, 'post/createTopic.html', {'form' : form})
+
+def deleteComment(request, pk):
+    comment = Comment.objects.get(id=pk)
+    if comment.user != request.user:
+        return HttpResponse("GTFO of here bitch")
+    if request.method == "POST":
+        comment.delete()
+        return redirect('home')
+
+    return render(request,'post/delete.html')
+def editComments(request, pk):
+    comment = Comment.objects.get(id=pk)
+    form = editComment(instance=comment)
+    if request.method == 'POST':
+        form = editComment(request.POST,instance=comment)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+
+    return render(request, 'post/edit.html', {'form':form})
+
+
+def userProfile(request, pk):
+    user = User.objects.get(id=pk)
+    topic = Topic.objects.all()
+    comments = Comment.objects.filter(Q(user__username__icontains=user.username)).order_by('-created')
+
+    post = Post.objects.filter(Q(user__username__icontains=user.username))
+    return render(request, 'post/profile.html',{'user':user, 'topic':topic, 'post':post, 'comments':comments})

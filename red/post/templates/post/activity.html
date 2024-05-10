@@ -1,0 +1,12 @@
+<h3>Recent Activity</h3>
+    <hr>
+    {% for i in comments %}
+    
+    <div class="border">
+      <h6><a href="{% url 'profile' i.user.id %}">@{{i.user}}</a> {{i.created|timesince}} ago</h6>
+      <h6>{{i.message}}</h6>
+      
+    </div>
+    <br>
+    
+    {% endfor %}

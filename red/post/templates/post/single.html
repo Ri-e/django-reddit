@@ -33,8 +33,13 @@
       {% endif %}
       {% for i in comments %}
         <div>
+          {% if i.user == request.user %}
+          <a href="{% url 'deleteComment' i.id %}">Delete</a>
+          <br>
+          <a href="{% url 'edit' i.id %}">Edit Comment</a>
+          {% endif %}
           <p>
-            @{{i.user}} {{i.created|timesince}} ago
+            @{{i.user}} {{i.created|timesince}} ago 
           </p>
           <p>
             {{i.message}} 

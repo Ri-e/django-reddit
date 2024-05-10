@@ -1,0 +1,47 @@
+{% extends 'post/index.html' %}
+{% block content %}
+<style>
+    .user_info{
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .circle{
+        width: 100px;
+        height: 100px;
+        background-color: crimson;
+        border: solid 2px black;
+        border-radius: 50%;
+    }
+    .big{
+        display: grid;
+        grid-template-columns:  1fr 3fr 1fr;
+
+    }
+</style>
+<div class="big">
+    <div class="topic border">
+        {% include 'post/topic-search.html' %}
+    </div>
+    <div class="d">
+        <div class="user_info">
+
+            <div class="circle"></div>
+            @{{user}}
+        </div>
+        <div class="feed">
+            <h3>Recent Posts</h3>
+            <hr>
+            {% include 'post/feed.html' %}
+        </div>
+        
+    </div>
+    <div class="activity border">
+        {% include 'post/activity.html' %}
+    </div>
+</div>
+
+
+
+{% endblock %}
